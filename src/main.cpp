@@ -2,7 +2,7 @@
 #include "MotorControl.h"
 #include "DisplayControl.h"
 
-MotorControl stepper(2, 3, 8); // DIR, STEP, ENABLE
+MotorControl stepper(4, 3, 8); // DIR, STEP, ENABLE
 DisplayControl display(10, 9, 8); // CS, DC, RST
 
 void setup() {

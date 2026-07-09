@@ -1,4 +1,5 @@
 #include "MotorControl.h"
+#include <Arduino.h>
 
 MotorControl::MotorControl(int dir_pin, int step_pin, int enable_pin) {
   _dirPin = dir_pin;
@@ -41,10 +42,10 @@ void MotorControl::setMotorEnabled(bool enabled) {
 int MotorControl::getCurrentRPM() { return _currentRPM; }
 bool MotorControl::isEnabled() { return _isEnabled; }
 
-int MotorControl::rpmToMicrosDelay(int rpmValue) {
+unsigned long MotorControl::rpmToMicrosDelay(int rpmValue) {
   if (rpmValue == 0) return 0;
-  // 60 seconds * 1,000,000 micros / (RPM * steps_per_rev * 2 toggles)
-  return (60L * 1000000L) / (rpmValue * _stepsPerRev * 2L);
+  
+  return 60000000UL / ((unsigned long)rpmValue * 1600UL);
 }
 
 void MotorControl::update() {
@@ -66,10 +67,13 @@ void MotorControl::update() {
   // 2. Process Stepping (Non-blocking)
   if (_isEnabled && _currentRPM > 0) {
     unsigned long stepInterval = rpmToMicrosDelay(_currentRPM);
+    
     if (currentMicros - _lastStepTime >= stepInterval) {
       _lastStepTime = currentMicros;
-      _stepState = !_stepState;
-      digitalWrite(_stepPin, _stepState);
+      
+      digitalWrite(_stepPin, HIGH);
+      delayMicroseconds(2); 
+      digitalWrite(_stepPin, LOW);
     }
   }
 }

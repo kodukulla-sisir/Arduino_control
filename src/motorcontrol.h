@@ -30,7 +30,7 @@ class MotorControl {
     bool _stepState;
     const int _stepsPerRev = 400; // Change if using microstepping
     
-    int rpmToMicrosDelay(int rpmValue);
+    unsigned long rpmToMicrosDelay(int rpmValue);
 };
 
 #endif
